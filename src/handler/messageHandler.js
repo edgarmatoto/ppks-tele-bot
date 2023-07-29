@@ -6,25 +6,18 @@ async function handleMessage(ctx) {
   const messageBody = ctx.message.text.toLowerCase();
 
   const greetingKeywords = ['hi', 'hello', 'halo', 'hai', 'helo', 'p', 'menu', '/menu', 'layanan'];
-  const serviceOptions = [
-    'Pengaduan laporan kekerasan seksual.',
-    'Bimbingan konseling dengan satgas ppks.',
-    'Saran dan tips untuk menghindari kekerasan seksual.',
-    'FAQ seputar kekerasan seksual.',
-    'Pertanyaan lain seputar kekerasan seksual',
-  ];
 
   //  handle message
   if (greetingKeywords.includes(messageBody)) {
     const userContact = await ctx.getChat();
     const name = userContact.first_name;
-    ctx.reply(`Halo ${name}! Selamat datang di layanan Penanganan dan Pengaduan Pelecehan Seksual :).\n\nKami siap membantu Anda untuk menemukan informasi dan sumber daya yang Anda butuhkan untuk mengatasi situasi yang mungkin Anda alami. Silahkan ketik atau klik /layanan untuk melihat daftar layanan.\n\nDapatkan informasi mengenai PPKS melalui website kami: https://ppks-web.vercel.app/`);
+    ctx.reply(`Halo ${name}! Selamat datang di layanan Penanganan dan Pengaduan Pelecehan Seksual :).\n\nKami siap membantu Anda untuk menemukan informasi dan sumber daya yang Anda butuhkan untuk mengatasi situasi yang mungkin Anda alami. Silahkan ketik /layanan untuk melihat daftar layanan.\n\nDapatkan informasi mengenai PPKS melalui website kami: https://ppks-web.vercel.app/`);
 
   } else if (messageBody.startsWith('/contoh')) {
     const userContact = await ctx.getChat();
     const name = userContact.first_name;
 
-    ctx.reply(`_Contoh:_ !lapor Nama saya ${name}, melaporkan bahwa saya telah mengalami pelecehan seksual oleh seseorang pria yang saya tidak kenal. Kejadian ini terjadi pada hari senin tanggal 12 Mei 2023 di lingkungan kampus XYZ.\n(Deskripsi kejadian)...`);
+    ctx.reply(`Contoh:\n!lapor Nama saya ${name}, melaporkan bahwa saya telah mengalami pelecehan seksual oleh seseorang pria yang saya tidak kenal. Kejadian ini terjadi pada hari senin tanggal 12 Mei 2023 di lingkungan kampus XYZ.\n(Deskripsi kejadian)...`);
   } else if (messageBody.startsWith('!lapor')) {
     const databaseService = new DatabaseService();
     const emailService = new EmailService();
