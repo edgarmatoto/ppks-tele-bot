@@ -11,10 +11,10 @@ services:
       POSTGRES_DB: ppks
 
   app:
-    container_name: whatsapp_web_container
+    container_name: tele_bot_container
     restart: on-failure
     build: .
-    image: whatsapp_web_image
+    image: tele_bot_image
     depends_on:
       - db
     ports:
