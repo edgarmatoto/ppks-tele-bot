@@ -12,9 +12,9 @@ class EmailService {
   }
 
   async sendEmail(userInformation) {
-    const { name, username, reportDescription } = userInformation;
+    const { usia, jenis_kelamin, deskripsi } = userInformation;
 
-    const text = `Nama: ${name}\n\nKontak:${username}\n\nDeskripsi laporan:${reportDescription}`;
+    const text = `Usia: ${usia}\n\njenis kelamin:${jenis_kelamin}\n\nDeskripsi kejadian:${deskripsi}`;
 
     const mailOptions = {
       from: process.env.EMAIL,

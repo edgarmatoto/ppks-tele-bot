@@ -7,16 +7,69 @@ class DatabaseService {
     this._pool = new Pool();
   }
 
-  async addReport(userInformation) {
-    const { name, username, reportDescription } = userInformation;
-
-    if (reportDescription.split(' ').length < 10) {
-      throw new Error('Laporan tidak diproses. Masukkan laporan minimal 10 kata.');
-    }
+  async addReportInformation(userInformation) {
+    const { username } = userInformation;
 
     const query = {
-      text: 'INSERT INTO report(name, contact, description) values($1, $2, $3)',
-      values: [name, username, reportDescription],
+      text: 'INSERT INTO laporan(kontak) values($1)',
+      values: [username],
+    };
+
+    await this._pool.query(query);
+  }
+
+  async updateUserAge(userInformation) {
+    const { username, age } = userInformation;
+
+    const query = {
+      text: 'UPDATE laporan SET usia = $2 WHERE kontak = $1',
+      values: [username, age],
+    };
+
+    await this._pool.query(query);
+  }
+
+  async updateUserGender(userInformation) {
+    const { username, gender } = userInformation;
+
+    const query = {
+      text: 'UPDATE laporan SET jenis_kelamin = $2 WHERE kontak = $1',
+      values: [username, gender],
+    };
+
+    await this._pool.query(query);
+  }
+
+  async updateUserDescription(userInformation) {
+    const { username, desc } = userInformation;
+
+    const query = {
+      text: 'UPDATE laporan SET deskripsi = $2 WHERE kontak = $1',
+      values: [username, desc],
+    };
+
+    await this._pool.query(query);
+  }
+
+  async getUserReport(userInformation) {
+    const { username } = userInformation;
+
+    const query = {
+      text: 'SELECT usia, jenis_kelamin, deskripsi FROM laporan where kontak = $1',
+      values: [username],
+    };
+
+    const result = await this._pool.query(query);
+
+    return result.rows[0];
+  }
+
+  async addCounselingInformation(userInformation) {
+    const { userName, userNumber } = userInformation;
+
+    const query = {
+      text: 'INSERT INTO konseling(nama, kontak) VALUES($1, $2)',
+      values: [userName, userNumber],
     };
 
     await this._pool.query(query);
@@ -24,7 +77,7 @@ class DatabaseService {
 
   async getAnswerById(id) {
     const query = {
-      text: 'SELECT description FROM faq WHERE id = $1',
+      text: 'SELECT deskripsi FROM faq WHERE id = $1',
       values: [id],
     };
 
@@ -37,10 +90,10 @@ class DatabaseService {
     return answer;
   }
 
-  async ValidateReportTimeDiff(username) {
+  async ValidateReportTimeDiff(userNumber) {
     const query = {
       text: 'SELECT created_at FROM report WHERE contact = $1 ORDER BY created_at DESC',
-      values: [username],
+      values: [userNumber],
     };
     const result = await this._pool.query(query);
 

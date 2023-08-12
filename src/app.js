@@ -1,6 +1,7 @@
 import dotenv from 'dotenv';
 import { Telegraf, Markup } from 'telegraf';
 import handleMessage from './handler/messageHandler.js';
+import DatabaseService from './service/DatabaseService.js';
 
 dotenv.config();
 
@@ -32,7 +33,17 @@ bot.command('layanan', (ctx) => {
 });
 
 bot.action('1', async (ctx) => {
-  ctx.reply('Untuk melakukan pelaporan, silakan ketik *!lapor* di dilanjutkan dengan deskripsi kejadian anda.\n\nAnda dapat melihat contoh laporan dengan mengetik pesan: */contoh*');
+  const databaseService = new DatabaseService();
+  const userContact = await ctx.getChat();
+  const username = `@${userContact.username}`;
+
+  try {
+    await databaseService.addReportInformation({ username });
+  } catch (error) {
+    ctx.reply(error.message);
+  }
+
+  ctx.reply('Masukkan usia korban. Caranya:\n\n/usia 14');
 });
 
 bot.action('2', async (ctx) => {

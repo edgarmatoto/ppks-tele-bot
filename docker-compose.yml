@@ -1,0 +1,21 @@
+version: "1"
+services:
+  db:
+    image: postgres:15
+    restart: always
+    ports:
+      - "35432:5432"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: "1213"
+      POSTGRES_DB: ppks
+
+  app:
+    container_name: whatsapp_web_container
+    restart: on-failure
+    build: .
+    image: whatsapp_web_image
+    depends_on:
+      - db
+    ports:
+      - "3001:3000"

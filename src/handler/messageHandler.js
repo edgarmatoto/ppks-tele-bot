@@ -13,27 +13,52 @@ async function handleMessage(ctx) {
     const name = userContact.first_name;
     ctx.reply(`Halo ${name}! Selamat datang di layanan Penanganan dan Pengaduan Pelecehan Seksual :).\n\nKami siap membantu Anda untuk menemukan informasi dan sumber daya yang Anda butuhkan untuk mengatasi situasi yang mungkin Anda alami. Silahkan ketik /layanan untuk melihat daftar layanan.\n\nDapatkan informasi mengenai PPKS melalui website kami: https://ppks-web.vercel.app/`);
 
-  } else if (messageBody.startsWith('/contoh')) {
+  } else if (messageBody.startsWith('/usia')) {
+    const databaseService = new DatabaseService();
     const userContact = await ctx.getChat();
-    const name = userContact.first_name;
+    const username = `@${userContact.username}`;
+    const age = messageBody.slice(6);
 
-    ctx.reply(`Contoh:\n!lapor Nama saya ${name}, melaporkan bahwa saya telah mengalami pelecehan seksual oleh seseorang pria yang saya tidak kenal. Kejadian ini terjadi pada hari senin tanggal 12 Mei 2023 di lingkungan kampus XYZ.\n(Deskripsi kejadian)...`);
-  } else if (messageBody.startsWith('!lapor')) {
+    try {
+      await databaseService.updateUserAge({ username, age });
+    } catch (error) {
+      ctx.reply(error.message);
+    }
+
+    ctx.reply('Masukkan gender korban. Caranya:\n\n/gender perempuan');
+  } else if (messageBody.startsWith('/gender')) { // pengaduan laporan kekerasan seksual.
+    const databaseService = new DatabaseService();
+    const userContact = await ctx.getChat();
+    const username = `@${userContact.username}`;
+    const gender = messageBody.slice(8);
+
+    try {
+      await databaseService.updateUserGender({ username, gender });
+    } catch (error) {
+      ctx.reply(error.message);
+    }
+
+    ctx.reply('Masukkan deskripsi kejadian. Caranya:\n\n/deskripsi Saya ingin melaporkan bahwa seseorang telah mengalami pelecehan seksual pada hari senin tanggal 12 Mei 2023 di lingkungan kampus XYZ, ...');
+  } else if (messageBody.startsWith('/deskripsi')) {
     const databaseService = new DatabaseService();
     const emailService = new EmailService();
 
     const userContact = await ctx.getChat();
-    const name = userContact.first_name;
     const username = `@${userContact.username}`;
-    const reportDescription = messageBody.slice(7);
+    const desc = messageBody.slice(11);
 
     try {
-      await databaseService.ValidateReportTimeDiff(username);
+      await databaseService.updateUserDescription({ username, desc });
 
-      await databaseService.addReport({ name, username, reportDescription });
-      await emailService.sendEmail({ name, username, reportDescription });
+      const {
+        usia, jenis_kelamin, deskripsi,
+      } = await databaseService.getUserReport({ username });
 
-      ctx.reply(`Terima kasih ${name}, laporan anda telah dimasukkan ke dalam data satgas PPKS.\n\nJika Anda bersedia, *kami sangat-sangat menyarankan Anda untuk melakukan konseling dengan Satgas PPKS* untuk mendapatkan dukungan dan bimbingan lebih lanjut\n\nKami memastikan bahwa *semua informasi yang Anda berikan akan dijaga kerahasiaannya*. Kami berkomitmen untuk memberikan dukungan dan bimbingan dalam setiap tahap proses pengaduan dan akan memastikan bahwa Anda merasa aman dan terlindungi.`);
+      await emailService.sendEmail({
+        usia, jenis_kelamin, deskripsi,
+      });
+
+      ctx.reply('Terima kasih , laporan anda telah dimasukkan ke dalam data satgas PPKS.\n\nJika Anda bersedia, *kami sangat-sangat menyarankan Anda untuk melakukan konseling dengan Satgas PPKS* untuk mendapatkan dukungan dan bimbingan lebih lanjut\n\nKami memastikan bahwa *semua informasi yang Anda berikan akan dijaga kerahasiaannya*. Kami berkomitmen untuk memberikan dukungan dan bimbingan dalam setiap tahap proses pengaduan dan akan memastikan bahwa Anda merasa aman dan terlindungi.');
     } catch (error) {
       ctx.reply(error.message);
     }

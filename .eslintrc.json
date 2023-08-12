@@ -16,6 +16,7 @@
         "class-methods-use-this":"off",
         "import/extensions":"off",
         "max-len":"off",
-        "padded-blocks":"off"
+        "padded-blocks":"off",
+        "camelcase":"off"
     }
 }
