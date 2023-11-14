@@ -9,6 +9,8 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: "1213"
       POSTGRES_DB: ppks
+      volumes:
+        - ./ppks.sql:/docker-entrypoint-initdb.d/ppks.sql
 
   app:
     container_name: tele_bot_container
