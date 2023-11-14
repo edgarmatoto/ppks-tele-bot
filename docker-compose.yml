@@ -9,7 +9,7 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: "1213"
       POSTGRES_DB: ppks
-      volumes:
+    volumes:
         - ./ppks.sql:/docker-entrypoint-initdb.d/ppks.sql
 
   app:
