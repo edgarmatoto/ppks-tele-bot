@@ -8,8 +8,8 @@ dotenv.config();
 const bot = new Telegraf(process.env.BOT_TOKEN);
 
 bot.start(async (ctx) => {
-  const userContact = await ctx.getChat();
-  const name = userContact.first_name;
+  const user = await ctx.getChat();
+  const name = user.first_name;
   ctx.reply(`Halo ${name}! Selamat datang di layanan Penanganan dan Pengaduan Pelecehan Seksual :).\n\nKami siap membantu Anda untuk menemukan informasi dan sumber daya yang Anda butuhkan untuk mengatasi situasi yang mungkin Anda alami. Silahkan ketik /layanan untuk melihat daftar layanan.\n\nDapatkan informasi mengenai PPKS melalui website kami: https://ppks-web.vercel.app/`);
 });
 
@@ -19,7 +19,7 @@ bot.command('layanan', (ctx) => {
     'Bimbingan konseling dengan satgas ppks.',
     'Saran dan tips untuk menghindari kekerasan seksual.',
     'FAQ seputar kekerasan seksual.',
-    'Pertanyaan lain seputar kekerasan seksual',
+    // 'Pertanyaan lain seputar kekerasan seksual',
   ];
   ctx.reply(`Silahkan pilih layanan yang anda butuhkan:\n\n${serviceOptions.map((option, index) => `${index + 1}. ${option}`).join('\n')}`, Markup.inlineKeyboard(
     [
@@ -34,11 +34,11 @@ bot.command('layanan', (ctx) => {
 
 bot.action('1', async (ctx) => {
   const databaseService = new DatabaseService();
-  const userContact = await ctx.getChat();
-  const username = `@${userContact.username}`;
+  const user = await ctx.getChat();
+  const userContact = `@${user.username}`;
 
   try {
-    await databaseService.addReportInformation({ username });
+    await databaseService.addUserContact({ userContact });
   } catch (error) {
     ctx.reply(error.message);
   }

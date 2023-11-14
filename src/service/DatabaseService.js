@@ -7,56 +7,56 @@ class DatabaseService {
     this._pool = new Pool();
   }
 
-  async addReportInformation(userInformation) {
-    const { username } = userInformation;
+  async addUserContact(userInformation) {
+    const { userContact } = userInformation;
 
     const query = {
       text: 'INSERT INTO laporan(kontak) values($1)',
-      values: [username],
+      values: [userContact],
     };
 
     await this._pool.query(query);
   }
 
   async updateUserAge(userInformation) {
-    const { username, age } = userInformation;
+    const { userContact, age } = userInformation;
 
     const query = {
       text: 'UPDATE laporan SET usia = $2 WHERE kontak = $1',
-      values: [username, age],
+      values: [userContact, age],
     };
 
     await this._pool.query(query);
   }
 
   async updateUserGender(userInformation) {
-    const { username, gender } = userInformation;
+    const { userContact, gender } = userInformation;
 
     const query = {
       text: 'UPDATE laporan SET jenis_kelamin = $2 WHERE kontak = $1',
-      values: [username, gender],
+      values: [userContact, gender],
     };
 
     await this._pool.query(query);
   }
 
   async updateUserDescription(userInformation) {
-    const { username, desc } = userInformation;
+    const { userContact, desc } = userInformation;
 
     const query = {
       text: 'UPDATE laporan SET deskripsi = $2 WHERE kontak = $1',
-      values: [username, desc],
+      values: [userContact, desc],
     };
 
     await this._pool.query(query);
   }
 
   async getUserReport(userInformation) {
-    const { username } = userInformation;
+    const { userContact } = userInformation;
 
     const query = {
       text: 'SELECT usia, jenis_kelamin, deskripsi FROM laporan where kontak = $1',
-      values: [username],
+      values: [userContact],
     };
 
     const result = await this._pool.query(query);
@@ -65,11 +65,11 @@ class DatabaseService {
   }
 
   async addCounselingInformation(userInformation) {
-    const { userName, userNumber } = userInformation;
+    const { userContact, userNumber } = userInformation;
 
     const query = {
       text: 'INSERT INTO konseling(nama, kontak) VALUES($1, $2)',
-      values: [userName, userNumber],
+      values: [userContact, userNumber],
     };
 
     await this._pool.query(query);
@@ -86,7 +86,7 @@ class DatabaseService {
       return 'Maaf, pertanyaan belum tersedia.';
     }
 
-    const answer = result.rows[0].description;
+    const answer = result.rows[0].deskripsi;
     return answer;
   }
 
